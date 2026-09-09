@@ -1,0 +1,30 @@
+name: Python lint
+
+# Run the workflow for every pull request so code is checked before merging.
+on:
+  pull_request:
+
+jobs:
+  lint:
+    # Use a clean Ubuntu runner supplied by GitHub Actions.
+    runs-on: ubuntu-latest
+
+    steps:
+      # Download the repository contents onto the runner.
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # Install the Python version used by this demo.
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      # Install the only tool needed for this workflow.
+      - name: Install flake8
+        run: python -m pip install flake8
+
+      # flake8 returns a non-zero status when it finds errors,
+      # which makes this workflow fail and blocks a clean check.
+      - name: Run flake8
+        run: flake8 . --exclude=.git
